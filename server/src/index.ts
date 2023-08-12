@@ -1,9 +1,13 @@
+import { config } from "dotenv";
+config();
 import express from "express";
 import cors from "cors";
-import { config } from "dotenv";
 import mongoose from "mongoose";
-import { addWaifuController, getWaifusController } from "./controllers/index";
-config();
+import {
+  addWaifuController,
+  deleteWaifuController,
+  getWaifusController,
+} from "./controllers/index";
 
 const app = express();
 app.use(cors());
@@ -11,6 +15,9 @@ app.use(express.json());
 
 // get waifu endpoint
 app.get("/waifus", getWaifusController);
+
+// delete waifu endpoint
+app.delete("/waifus/:waifuId", deleteWaifuController);
 
 // add waifu endpoint
 app.post("/waifus", addWaifuController);
