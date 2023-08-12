@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 // Define the interface for waifu data
 export interface Waifu {
-  id: string;
+  _id: string;
   name: string;
   imageURL: string;
   from: string;
@@ -64,6 +64,17 @@ export const createWaifu = createAsyncThunk<Waifu, Omit<Waifu, "id">>(
   }
 );
 
+export const deleteWaifu = createAsyncThunk<Waifu, string>(
+  "waifu/delete",
+  async (waifuId) => {
+    const res = await fetch(`http://localhost:8080/waifus/${waifuId}`, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+    return data;
+  }
+);
+
 // export const updateWaifu = createAsyncThunk<
 //   Waifu,
 //   { id: number; formData: FormData }
@@ -80,17 +91,6 @@ export const createWaifu = createAsyncThunk<Waifu, Omit<Waifu, "id">>(
 //     throw error;
 //   }
 // });
-
-// export const deleteWaifu = createAsyncThunk<Waifu, number>(
-//   "waifu/delete",
-//   async (id) => {
-//     const res = await fetch(`api/waifus/${id}/delete`, {
-//       method: "DELETE",
-//     });
-//     const data = await res.json();
-//     return data;
-//   }
-// );
 
 export const waifuSlice = createSlice({
   name: "waifu",
@@ -122,6 +122,21 @@ export const waifuSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchWaifu.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "An error occurred.";
+      })
+      .addCase(deleteWaifu.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteWaifu.fulfilled, (state, action) => {
+        state.waifus = state.waifus.filter(
+          (waifu) => waifu._id !== action.payload._id
+        );
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(deleteWaifu.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "An error occurred.";
       });

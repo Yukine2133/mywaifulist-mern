@@ -17,11 +17,11 @@ const Home = () => {
           waifus.map((waifu) => {
             return (
               <WaifusList
-                key={waifu.id}
+                key={waifu._id}
                 name={waifu.name}
                 imageURL={waifu.imageURL}
                 from={waifu.from}
-                id={waifu.id}
+                _id={waifu._id}
               />
             );
           })}
