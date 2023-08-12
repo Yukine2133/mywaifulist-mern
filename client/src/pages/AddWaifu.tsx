@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useAppDispatch } from "../hooks/hooks";
 import { createWaifu } from "../store/features/waifuSlice";
+import { useNavigate } from "react-router-dom";
 
 const AddWaifu = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -37,6 +39,7 @@ const AddWaifu = () => {
         from: "",
         imageURL: "",
       });
+      navigate("/");
     }
   };
 
@@ -69,7 +72,7 @@ const AddWaifu = () => {
         <div className="flex flex-col">
           <label className="text-xl ">Image:</label>
           <input
-            className="mt-3"
+            className="p-1  text-black outline-none mt-3 rounded-md placeholder:text-violet-800 "
             type="text"
             name="imageURL"
             value={imageURL}
