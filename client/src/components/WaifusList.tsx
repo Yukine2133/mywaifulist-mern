@@ -1,4 +1,4 @@
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { Waifu, deleteWaifu } from "../store/features/waifuSlice";
 import { useAppDispatch } from "../hooks/hooks";
@@ -43,11 +43,11 @@ const WaifusList = ({ _id, name, from, imageURL }: Waifu) => {
         />
       </div>
       <div className="flex mt-1 justify-between">
-        {/* // <Link to={`/waifus/${id}/update`}>
-        //   <button>
-        //     <AiFillEdit className="text-blue-500 text-2xl" />
-        //   </button>
-        // </Link> */}
+        <Link to={`/waifus/${_id}/update`}>
+          <button>
+            <AiFillEdit className="text-blue-500 text-2xl" />
+          </button>
+        </Link>
 
         <button onClick={() => handleDeleteWaifu(_id)}>
           <AiFillDelete className="text-red-500 text-2xl" />

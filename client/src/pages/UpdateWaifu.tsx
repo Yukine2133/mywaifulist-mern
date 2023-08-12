@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { updateWaifu } from "../store/features/waifuSlice";
 import { useAppDispatch } from "../hooks/hooks";
-import { createWaifu } from "../store/features/waifuSlice";
-import { useNavigate } from "react-router-dom";
 
-const AddWaifu = () => {
-  const dispatch = useAppDispatch();
+const UpdateWaifu = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,31 +23,23 @@ const AddWaifu = () => {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const waifuData = {
-      name,
-      from,
-      imageURL,
-      _id: "",
-    };
-
     try {
-      await dispatch(createWaifu(waifuData));
+      await dispatch(
+        updateWaifu({
+          id,
+          updatedData: { name, from, imageURL },
+        })
+      );
     } catch (err) {
       console.error(err);
     } finally {
-      // reset the form fields after successful submission
-      setFormData({
-        name: "",
-        from: "",
-        imageURL: "",
-      });
       navigate("/");
     }
   };
 
   return (
     <div className="flex justify-center pt-12 items-center flex-col">
-      <h2 className="text-2xl mb-4">Add Waifu</h2>
+      <h2 className="text-2xl mb-4">Update Waifu</h2>
       <form className="flex flex-col gap-8" onSubmit={onSubmit}>
         <div className="flex flex-col">
           <label className="text-xl ">Name:</label>
@@ -84,11 +77,11 @@ const AddWaifu = () => {
           className="py-3 px-4 bg-gradient-to-r from-violet-700  hover:opacity-75 transition-opacity duration-300 to-purple-600 text-white rounded-md"
           type="submit"
         >
-          Create
+          Update
         </button>
       </form>
     </div>
   );
 };
 
-export default AddWaifu;
+export default UpdateWaifu;
