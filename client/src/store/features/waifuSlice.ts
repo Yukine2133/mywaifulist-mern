@@ -20,15 +20,6 @@ const initialState: WaifuState = {
   error: null,
 };
 
-// Async thunk for fetching all waifus
-// export const fetchWaifu = createAsyncThunk<Waifu[]>("waifu/fetch", async () => {
-//   const res = await fetch("/api/waifus", {
-//     method: "GET",
-//   });
-//   const data = await res.json();
-//   return data;
-// });
-
 // Async thunk for fetching a single waifu based on ID
 // export const fetchSingleWaifu = createAsyncThunk<Waifu, number>(
 //   "single-waifu/fetch",
@@ -40,6 +31,13 @@ const initialState: WaifuState = {
 //     return data;
 //   }
 // );
+
+// Async thunk for fetching all waifus
+export const fetchWaifu = createAsyncThunk<Waifu[]>("waifu/fetch", async () => {
+  const res = await fetch("http://localhost:8080/waifus");
+  const data = await res.json();
+  return data;
+});
 
 export const createWaifu = createAsyncThunk<Waifu, Omit<Waifu, "id">>(
   "waifu/create",
@@ -111,6 +109,19 @@ export const waifuSlice = createSlice({
         state.error = null;
       })
       .addCase(createWaifu.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "An error occurred.";
+      })
+      .addCase(fetchWaifu.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchWaifu.fulfilled, (state, action) => {
+        state.waifus = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(fetchWaifu.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "An error occurred.";
       });
