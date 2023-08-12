@@ -9,6 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// add waifu endpoint
 app.post("/waifus", addWaifuController);
 
 // connect database and server
