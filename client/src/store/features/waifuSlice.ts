@@ -20,24 +20,12 @@ const initialState: WaifuState = {
   error: null,
 };
 
-// Async thunk for fetching a single waifu based on ID
-// export const fetchSingleWaifu = createAsyncThunk<Waifu, number>(
-//   "single-waifu/fetch",
-//   async (id) => {
-//     const res = await fetch(`/api/waifus/${id}`, {
-//       method: "GET",
-//     });
-//     const data = await res.json();
-//     return data;
-//   }
-// );
-
 // create
 export const createWaifu = createAsyncThunk<Waifu, Omit<Waifu, "id">>(
   "waifu/create",
   async (waifuData) => {
     try {
-      const res = await fetch("http://localhost:8080/waifus", {
+      const res = await fetch("https://mywaifulist.onrender.com/waifus", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +48,7 @@ export const createWaifu = createAsyncThunk<Waifu, Omit<Waifu, "id">>(
 
 // read
 export const fetchWaifu = createAsyncThunk<Waifu[]>("waifu/fetch", async () => {
-  const res = await fetch("http://localhost:8080/waifus");
+  const res = await fetch("https://mywaifulist.onrender.com/waifus");
   const data = await res.json();
   return data;
 });
@@ -71,7 +59,7 @@ export const updateWaifu = createAsyncThunk<
   { id: string | undefined; updatedData: Partial<Waifu> }
 >("waifu/update", async ({ id, updatedData }) => {
   try {
-    const res = await fetch(`http://localhost:8080/waifus/${id}`, {
+    const res = await fetch(`https://mywaifulist.onrender.com/waifus/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -95,9 +83,12 @@ export const updateWaifu = createAsyncThunk<
 export const deleteWaifu = createAsyncThunk<Waifu, string>(
   "waifu/delete",
   async (waifuId) => {
-    const res = await fetch(`http://localhost:8080/waifus/${waifuId}`, {
-      method: "DELETE",
-    });
+    const res = await fetch(
+      `https://mywaifulist.onrender.com/waifus/${waifuId}`,
+      {
+        method: "DELETE",
+      }
+    );
     const data = await res.json();
     return data;
   }
