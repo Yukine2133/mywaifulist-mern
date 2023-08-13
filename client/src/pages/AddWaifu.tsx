@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useAppDispatch } from "../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { createWaifu } from "../store/features/waifuSlice";
 import { useNavigate } from "react-router-dom";
+import { formFailure, formSuccess, formValidation } from "../hooks/form";
 
 const AddWaifu = () => {
   const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.waifu);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -29,10 +31,16 @@ const AddWaifu = () => {
       _id: "",
     };
 
+    if (!formValidation(name, from, imageURL)) {
+      return;
+    }
+
     try {
       await dispatch(createWaifu(waifuData));
+      formSuccess("Waifu was added!");
     } catch (err) {
       console.error(err);
+      formFailure(String(err));
     } finally {
       // reset the form fields after successful submission
       setFormData({
@@ -84,7 +92,7 @@ const AddWaifu = () => {
           className="py-3 px-4 bg-gradient-to-r from-violet-700  hover:opacity-75 transition-opacity duration-300 to-purple-600 text-white rounded-md"
           type="submit"
         >
-          Create
+          {loading ? "Loading..." : "Create"}
         </button>
       </form>
     </div>

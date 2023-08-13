@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateWaifu } from "../store/features/waifuSlice";
-import { useAppDispatch } from "../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
+import { formFailure, formSuccess, formValidation } from "../hooks/form";
 
 const UpdateWaifu = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.waifu);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -23,6 +25,10 @@ const UpdateWaifu = () => {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!formValidation(name, from, imageURL)) {
+      return;
+    }
+
     try {
       await dispatch(
         updateWaifu({
@@ -30,8 +36,10 @@ const UpdateWaifu = () => {
           updatedData: { name, from, imageURL },
         })
       );
+      formSuccess("Waifu was updated!");
     } catch (err) {
       console.error(err);
+      formFailure(String(err));
     } finally {
       navigate("/");
     }
@@ -77,7 +85,7 @@ const UpdateWaifu = () => {
           className="py-3 px-4 bg-gradient-to-r from-violet-700  hover:opacity-75 transition-opacity duration-300 to-purple-600 text-white rounded-md"
           type="submit"
         >
-          Update
+          {loading ? "Loading..." : "Update"}
         </button>
       </form>
     </div>
