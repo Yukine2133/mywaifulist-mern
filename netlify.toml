@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build" # Replace with your build command
+  publish = "dist" # Replace with your build output directory
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
